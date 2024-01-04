@@ -12,7 +12,7 @@
 
 
 function show_usage_and_exit {
-    echo -e "usage: ${0} <projectname>"
+    echo -e "usage: ${0} <projectname> backup|mount|unmount"
     exit 1
 }
 
@@ -44,7 +44,7 @@ function parse_commandline {
 	if [ -r "${SCRIPTPATH%.sh*}-${PROJECT}.conf" ]; then
 		CFGFILE=${SCRIPTPATH%.sh*}-${PROJECT}.conf
 		EXCLUDESFILE=${SCRIPTPATH%.sh*}-${PROJECT}.excludes
-	else if [ -r "/etc/${SCRIPTNAME}/${PROJECT}.conf" ]; then
+	elif [ -r "/etc/${SCRIPTNAME}/${PROJECT}.conf" ]; then
     	CFGFILE=/etc/${SCRIPTNAME}/${PROJECT}.conf
 		EXCLUDESFILE=/etc/${SCRIPTNAME}/${PROJECT}.excludes
 	else
@@ -67,11 +67,11 @@ function read_project_config {
 function read_project_excludes {
   EXCLUDESPARAM=
 	if [ -r ${EXCLUDESFILE} ]; then
-    if [ "${OPERATION_MODE}" == "sync" ]; then
-      EXCLUDESPARAM=--exclude-from=${EXCLUDESFILE}
-    elif [ "${OPERATION_MODE}" == "backup" ]; then
-      EXCLUDESPARAM="--exclude-globbing-filelist ${EXCLUDESFILE}"
-    fi
+    	if [ "${OPERATION_MODE}" == "sync" ]; then
+     		EXCLUDESPARAM=--exclude-from=${EXCLUDESFILE}
+    	elif [ "${OPERATION_MODE}" == "backup" ]; then
+    		EXCLUDESPARAM="--exclude-globbing-filelist ${EXCLUDESFILE}"
+    	fi
 	fi
 	return 0
 }
@@ -188,5 +188,7 @@ case ${ACTION} in
 	*)
 		echo -e "ERROR: unknown action ${ACTION}"
 		show_usage_and_exit
+		;;
+esac
 exit 0
 
